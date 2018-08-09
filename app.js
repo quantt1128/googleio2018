@@ -2,6 +2,8 @@ var express = require('express');
 var chalk = require('chalk');
 var app = express();
 
+app.use(express.static('public'));
+app.use(express.static('images'));
 
 app.get('/', function (req, res) {
     res.send("Hello from my library app");
@@ -81,16 +83,23 @@ app.use(bodyParser.urlencoded({ extended: false }))
 
 //To parse json data
 app.use(bodyParser.json());
+
 //template engine
+
 
 app.set('view engine', 'pug');
 app.set('views', './views');
 
 app.get('/first_template', function (req, res){
-    res.render('first_view');
-    res.send('ssss.');
+    res.render('first_view', {
+        name: req.route,
+        url: req.url
+    });
 });
 
+app.get('/components', (req, res) => {
+    res.render('content');
+});
 app.get('*', function (req, res) {
     res.send('Sorry, this is an invalid URL.');
 });
