@@ -1,18 +1,21 @@
 html
 head
    title Person
-   body
-      form(action = "/person", method = "POST")
-      div
-         label(for = "name") Name: 
-         input(name = "name")
-      br
-      div
-         label(for = "age") Age: 
-         input(name = "age")
-      br
-      div
-         label(for = "nationality") Nationality: 
-         input(name = "nationality")
-      br
-      button(type = "submit") Create new person
+   script(src='/public/js/main.js' type="text/javascript")
+   script(src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js")
+
+body
+    form(action = "/person" method = "POST" id="person-form")
+        div
+            label(for = "name") Name: 
+            input(name = "name")
+        br
+        div
+            label(for = "age") Age: 
+            input(name = "age")
+        br
+        div
+            label(for = "nationality") Nationality: 
+            input(name = "nationality")
+        br
+        button(type = "submit" id="person-submit" value="Create new person" ) Create new person

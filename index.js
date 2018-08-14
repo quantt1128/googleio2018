@@ -5,9 +5,7 @@ var upload = multer();
 var app = express();
 // connect to mongo db
 var mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost:3000/express', {useNewUrlParser: true});
-
-
+mongoose.connect('mongodb://localhost:27017/express', {useNewUrlParser: true});
 
 var personSchema = mongoose.Schema({
     name: String,
@@ -28,24 +26,21 @@ app.set('views', './views');
 app.use(bodyParser.json()); 
 
 // for parsing application/xwww-
-app.use(bodyParser.urlencoded({ extended: true })); 
+app.use(bodyParser.urlencoded({ extended: false })); 
 //form-urlencoded
 
 // for parsing multipart/form-data
 app.use(upload.array()); 
 app.use(express.static('public'));
 
-app.post('/', function(req, res){
-   res.send("received your request!");
-});
 
 // router: post, create new document
 app.post('/person', function(req, res){
     var personInfo = req.body; //Get the parsed information
-
+    console.log(req.body);
     if(!personInfo.name || !personInfo.age || !personInfo.nationality){
         res.render('show_message', {
-            message: "Sorry, you provided worng info", type: "error"});
+            message: "Sorry, you provided wrong info", type: "error"});
     } else {
         var newPerson = new Person({
             name: personInfo.name,
@@ -61,9 +56,41 @@ app.post('/person', function(req, res){
                 message: "New person added", type: "success", person: personInfo});
         });
     }
+ 
 });
 
-app.get('/', function(req, res){
-   res.render('form');
+// show all people in express db
+app.get('/people', function(req, res){
+    Person.find(function(err, response){
+        res.header("Content-Type",'application/json');
+        res.send(JSON.stringify(response, null, 4));
+    });
 });
+
+
+app.get('/people/:id', function(req, res){
+    Person.findById(req.params.id, function(err, response){
+        res.header("Content-Type",'application/json');
+        res.send(JSON.stringify(response, null, 4));
+     });
+});
+
+app.put('/people/update/:id', function(req, res){
+    Person.findByIdAndUpdate(req.params.id, req.body, function(err, response){
+        if(err) res.json({message: "Error in updating person with id " + req.params.id});
+        res.json(response);
+     });
+});
+
+
+app.delete('/people/delete/:id', function(req, res){
+    Person.findByIdAndRemove(req.params.id, function(err, response){
+       if(err) res.json({message: "Error in deleting record id " + req.params.id});
+       else res.json({message: "Person with id " + req.params.id + " removed."});
+    });
+ });
+
+// app.get('/', function(req, res){
+//    res.render('form');
+// });
 app.listen(3000);
