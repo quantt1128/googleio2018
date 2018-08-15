@@ -37,7 +37,6 @@ app.use(express.static('public'));
 // router: post, create new document
 app.post('/person', function(req, res){
     var personInfo = req.body; //Get the parsed information
-    console.log(req.body);
     if(!personInfo.name || !personInfo.age || !personInfo.nationality){
         res.render('show_message', {
             message: "Sorry, you provided wrong info", type: "error"});
