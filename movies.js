@@ -85,11 +85,11 @@ router.put('/:id', function(req, res){
     }
 });
 
-router.delete('/:id', function(req, res){
-    var removeIndex = movies.map(function(movie){
+router.delete('/delete/:id', function(req, res){
+    var movieIds = movies.map(function(movie){
         return movie.id;
-    }).indexOf(req.params.id); //Gets us the index of movie with given id.
-    console.log(movies);
+    }); //Gets us the index of movie with given id.
+    var removeIndex = movieIds.indexOf(req.params.id >> 0);
     if(removeIndex === -1){
         res.json({message: "Not found"});
     } else {
